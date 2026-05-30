@@ -1,61 +1,97 @@
-import { promises as fs } from "fs";
-import mysql from "mysql2/promise";
+import { connection } from "./dbConnection";
+import { readdirSync, readFileSync, writeFileSync } from "fs";
 
-const connection = async () => {
-	try {
-		return await mysql.createConnection({
-			host: process.env.MYSQL_HOST,
-			port: process.env.MYSQL_PORT ? parseInt(process.env.MYSQL_PORT) : 3306,
-			user: process.env.MYSQL_USER,
-			password: process.env.MYSQL_PASSWORD,
-			database: process.env.MYSQL_DATABASE,
-		});
-	} catch (error) {
-		console.error("Error creating database connection:", error);
-		throw error;
-	}
-};
+const migrationsPath = `src/migrations/`;
 
-const loadMigrations = async (type: string): Promise<string[]> => {
-	const filename = `src/migrations/migration-${type.toLowerCase()}.sql`;
-	const migrations: string[] = [];
+const loadMigrations = async (version: number): Promise<string[][]> => {
+	const migrations: string[][] = [];
 
 	try {
-		const content = await fs.readFile(filename, "utf-8");
-		migrations.push(
-			...content
-				.replace(/--.*$/gm, "")
-				.replace(/\/\*[\s\S]*?\*\//g, "")
-				.split(";")
-				.map((query) => query.replace(/\r?\n|\r/g, " ").trim())
-				.filter((query) => query.length > 0),
-		);
+		const files = readdirSync(migrationsPath)
+			.filter((file) => file !== "version")
+			.filter((file) => {
+				const match = file.match(/(\d+)\.sql/);
+				if (match) {
+					const fileVersion = parseInt(match[1]);
+					return fileVersion > version;
+				}
+			});
+
+		for (const file of files) {
+			const content = readFileSync(`${migrationsPath}/${file}`, "utf-8");
+			migrations.push([
+				...content
+					.replace(/--.*$/gm, "")
+					.replace(/\/\*[\s\S]*?\*\//g, "")
+					.split(";")
+					.map((query) => query.replace(/\r?\n|\r/g, " ").trim())
+					.filter((query) => query.length > 0),
+			]);
+		}
 	} catch (error) {
-		console.error(`Error reading migration file ${filename}:`, error);
+		console.error(`Error reading migration files:`, error);
 	}
 
 	return migrations;
 };
 
-export const migrate = async (type: string) => {
+const getMigrationVersion = (): number => {
+	let version = 0;
 	try {
-		const conn = await connection();
-		const migrations = await loadMigrations(type);
-
-		migrations.forEach((migration) => {
-			conn.execute(migration);
-		});
-		console.log("Database migrated successfully.");
+		version = parseInt(readFileSync(`${migrationsPath}/version`, "utf8").trim());
 	} catch (error) {
-		console.error("Error migrating:", error);
-		throw error;
+		// File not exists, return default version
+		if ((error as { code: string }).code === "ENOENT") {
+			return version;
+		} else {
+			throw error;
+		}
 	}
+
+	return version;
+};
+
+const updateMigrationVersion = (version: number) => {
+	writeFileSync(`${migrationsPath}/version`, version.toString(), "utf8");
+};
+
+export const migrate = async () => {
+	const currentVersion = getMigrationVersion();
+	let newVersion = currentVersion;
+	let error: Error | null = null;
+
+	const migrations = await loadMigrations(currentVersion);
+
+	for (const queries of migrations) {
+		let successfully_executed_migrations = 0;
+		for (const query of queries) {
+			try {
+				await connection.execute(query);
+				successfully_executed_migrations++;
+			} catch (err) {
+				console.error("Error executing query:", err);
+
+				error = err as Error;
+			}
+		}
+
+		if (queries.length === successfully_executed_migrations) {
+			newVersion++;
+		}
+	}
+
+	updateMigrationVersion(newVersion);
+
+	return {
+		currentVersion,
+		newVersion,
+		error,
+	};
 };
 
 export const query = async (sql: string, params?: string[]) => {
 	try {
-		const conn = await connection();
-		return await conn.execute(sql, params);
+		return await connection.execute(sql, params);
 	} catch (error) {
 		console.error("Error executing query:", error);
 		throw error;

@@ -2,7 +2,7 @@ import { query } from "@/core/db";
 
 export default class Repository {
 	private static getTableName() {
-		return this.name.toLowerCase() + "s";
+		return this.name.toLowerCase();
 	}
 
 	static async getAll() {

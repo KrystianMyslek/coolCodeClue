@@ -1,31 +1,39 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+"use client";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import "./globals.css";
+import TopPanel from "./topPanel";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "Cool Code Clue",
-};
+import { useEffect, useState } from "react";
 
 export default function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
-    </html>
-  );
+	const [isScrolled, setIsScrolled] = useState(false);
+
+	useEffect(() => {
+		const handleScroll = (e: WheelEvent): void => {
+			if (e.deltaY > 0) {
+				if (!isScrolled && document.querySelector(".content")?.scrollTop == 0) {
+					e.preventDefault();
+				}
+				setIsScrolled(true);
+			} else if (window.scrollY < 140 && document.querySelector(".content")?.scrollTop == 0) {
+				setIsScrolled(false);
+			}
+		};
+
+		window.addEventListener("mousewheel", handleScroll as EventListener, { passive: false });
+		return () => window.removeEventListener("mousewheel", handleScroll as EventListener);
+	}, [isScrolled]);
+
+	return (
+		<html lang="en" className={`h-full antialiased`}>
+			<body className={`${isScrolled ? "scrolled" : ""}`}>
+				<TopPanel />
+				<div className="content">{children}</div>
+			</body>
+		</html>
+	);
 }

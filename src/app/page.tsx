@@ -1,5 +1,3 @@
 export default function Home() {
-  	return (
-    	<h1>COOL CODE CLUE</h1>
-  	);
+	return <h1 className="text-2xl">Welcome to CoolCodeClue!</h1>;
 }

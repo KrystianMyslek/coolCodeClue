@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+:root {
+	--title-main-bg-color: #283655;
+	--title-secondary-bg-color: #4d648d;
+	--title-text-color: #d0e1f9;
+	--main-bg-color: #fff;
+	--main-text-color: #1e1f26;
+}
+
+.header {
+	@apply transition-all duration-500 ease-in-out w-full fixed flex items-end;
+
+	top: 0;
+	left: 0;
+	background-color: var(--title-main-bg-color);
+	height: 160px;
+
+	h1 {
+		@apply overflow-hidden;
+		color: var(--title-text-color);
+		font-size: 7rem;
+		height: 110px;
+		padding: 0 20px;
+	}
+
+	div {
+		@apply transition-all duration-500 ease-in-out w-full opacity-50 absolute;
+		height: 35px;
+		top: 125px;
+		background-color: var(--title-secondary-bg-color);
+	}
+}
+
+.nav {
+	@apply transition-all duration-500 ease-in-out w-full fixed flex items-center justify-center;
+	top: 0;
+	left: 0;
+	background-color: var(--title-secondary-bg-color);
+	color: var(--title-text-color);
+	font-size: 2rem;
+
+	height: 0;
+	opacity: 0;
+}
+
+.content {
+	@apply transition-all duration-500 ease-in-out flex flex-col fixed w-full;
+	background-color: var(--main-bg-color);
+	color: var(--main-text-color);
+	top: 180px;
+
+	height: 100%;
+	overflow-x: auto;
+}
+
+.scrolled {
+	.header {
+		height: 0;
+		div {
+			height: 0;
+			top: 0;
+		}
+	}
+
+	.nav {
+		height: 70px;
+		opacity: 1;
+	}
+
+	.content {
+		height: calc(100% - 90px);
+		top: 90px;
+	}
+}

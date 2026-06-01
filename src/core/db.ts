@@ -89,9 +89,13 @@ export const migrate = async () => {
 	};
 };
 
-export const query = async (sql: string, params?: string[]) => {
+export const execute = async (sql: string, values?: string[]) => {
 	try {
-		return await connection.execute(sql, params);
+		const [rows] = await connection.execute({
+			sql,
+			values,
+		});
+		return rows;
 	} catch (error) {
 		console.error("Error executing query:", error);
 		throw error;

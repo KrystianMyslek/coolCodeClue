@@ -1,15 +1,18 @@
-import { query } from "@/core/db";
+import User from "@/repository/user";
 
 export default class Repository {
-	private static getTableName() {
-		return this.name.toLowerCase();
-	}
+	className: string | null = null;
 
-	static async getAll() {
-		return await query(`SELECT * FROM ${this.getTableName()}`);
-	}
+	static create(className: string) {
+		if (!className) {
+			throw new Error("Class name is required");
+		}
 
-	static async getById(id: number) {
-		return await query(`SELECT * FROM ${this.getTableName()} WHERE id = ${id}`);
+		switch (className.toLowerCase()) {
+			case "user":
+				return new User();
+			default:
+				throw new Error(`Unknown repository: ${className}`);
+		}
 	}
 }

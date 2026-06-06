@@ -1,4 +1,4 @@
-import { isAuthenticated } from "@/core/auth";
+import { isAuthenticated } from "@/app/auth/actions";
 import Link from "next/link";
 import LogoutButton from "./logoutButton";
 

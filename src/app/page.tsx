@@ -1,3 +1,11 @@
+import Langs from "./lang/list/page";
+
 export default function Home() {
-	return <h1 className="text-2xl">Welcome to CoolCodeClue!</h1>;
+	return (
+		<div className="content">
+			<div className="flex w-full h-full">
+				<Langs />
+			</div>
+		</div>
+	);
 }

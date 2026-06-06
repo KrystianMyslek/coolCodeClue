@@ -59,7 +59,7 @@
 	@apply transition-all duration-500 ease-in-out flex flex-col fixed w-full;
 	background-color: var(--main-bg-color);
 	color: var(--main-text-color);
-	top: 180px;
+	top: 160px;
 
 	height: 100%;
 	overflow-x: auto;
@@ -80,7 +80,33 @@
 	}
 
 	.content {
-		height: calc(100% - 90px);
-		top: 90px;
+		height: calc(100% - 70px);
+		top: 70px;
+	}
+}
+
+.lang-button {
+	@apply rounded-lg cursor-pointer transition-colors duration-300 ease-in-out w-full text-white;
+	background-color: var(--title-secondary-bg-color);
+}
+
+.lang-button:hover {
+	background-color: var(--title-main-bg-color);
+}
+
+.langs {
+	a,
+	li div {
+		@apply my-4 mx-2 w-full;
+		a {
+			@apply text-2xl font-bold p-3 w-full;
+		}
+	}
+
+	ul {
+		@apply px-4;
+		li {
+			@apply text-lg px-4 py-2 my-2;
+		}
 	}
 }

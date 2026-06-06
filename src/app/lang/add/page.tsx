@@ -2,12 +2,12 @@
 
 import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "@/app/auth/actions";
+import { add } from "@/app/lang/actions";
 import { Oval } from "react-loader-spinner";
 
-export default function LoginPage() {
+export default function Add() {
 	const router = useRouter();
-	const [state, formAction, isPending] = useActionState(login, {
+	const [state, formAction, isPending] = useActionState(add, {
 		success: false,
 		error: null,
 	});
@@ -21,15 +21,15 @@ export default function LoginPage() {
 
 	return (
 		!state.success && (
-			<div className="w-xl mx-auto p-10 flex flex-col items-center gap-6">
-				<h1 className="text-3xl font-bold mb-4">Login to add new content</h1>
+			<div className="w-full p-10 flex flex-col">
+				<h1 className="text-3xl font-bold mb-4">Add Language</h1>
 
-				<form action={formAction} className="w-full">
+				<form action={formAction}>
 					<input
-						className="w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2"
-						name="password"
-						type="password"
-						placeholder="Password"
+						className="w-lg border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2"
+						name="name"
+						type="text"
+						placeholder="Language Name"
 					/>
 
 					{state.error && (
@@ -40,7 +40,7 @@ export default function LoginPage() {
 
 					<button
 						disabled={isPending}
-						className="border hover:bg-gray-200 cursor-pointer w-full font-bold mt-4 py-2 rounded flex items-center justify-center"
+						className="border hover:bg-gray-200 cursor-pointer px-4 font-bold mt-4 py-2 rounded flex items-center justify-center"
 						type="submit"
 					>
 						{isPending ? (
@@ -54,7 +54,7 @@ export default function LoginPage() {
 								/>
 							</div>
 						) : (
-							"Log in"
+							"Add Language"
 						)}
 					</button>
 				</form>

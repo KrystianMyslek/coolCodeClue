@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { logoutAction } from "@/app/auth//actions";
+import { logout } from "@/app/auth//actions";
 import { useRouter } from "next/navigation";
 
 export default function LogoutButton() {
@@ -10,8 +10,7 @@ export default function LogoutButton() {
 
 	const handleLogout = () => {
 		startTransition(async () => {
-			await logoutAction();
-			router.push("/");
+			await logout();
 			router.refresh();
 		});
 	};

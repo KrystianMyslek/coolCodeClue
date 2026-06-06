@@ -12,6 +12,14 @@ export default function Header() {
 
 	useEffect(() => {
 		const handleScroll = (e: WheelEvent): void => {
+			// Prevent header from appearing when scrolling the language list
+			if (e.target instanceof Element) {
+				const scrollPos = e.target.closest("#langList")?.scrollTop;
+				if (scrollPos !== undefined && scrollPos > 0) {
+					return;
+				}
+			}
+
 			if (e.deltaY > 0) {
 				if (!isScrolled && document.querySelector(".content")?.scrollTop == 0) {
 					e.preventDefault();

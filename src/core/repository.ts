@@ -1,5 +1,6 @@
 import User from "@/repository/user";
 import Lang from "@/repository/lang";
+import Clue from "@/repository/clue";
 
 export default class Repository {
 	className: string | null = null;
@@ -14,6 +15,8 @@ export default class Repository {
 				return new User();
 			case "lang":
 				return new Lang();
+			case "clue":
+				return new Clue();
 			default:
 				throw new Error(`Unknown repository: ${className}`);
 		}

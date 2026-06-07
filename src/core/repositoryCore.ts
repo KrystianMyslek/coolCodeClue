@@ -13,6 +13,14 @@ export class RepositoryCore<T> {
 		return (await execute(`SELECT * FROM ${this.getTableName()} WHERE id = ${id}`)) as T | null;
 	}
 
+	async find(condition: Record<string, string | number>): Promise<T[] | null> {
+		const whereClause = Object.entries(condition)
+			.map(([key, value]) => `${key} = ${typeof value === "string" ? `'${value}'` : value}`)
+			.join(" AND ");
+
+		return (await execute(`SELECT * FROM ${this.getTableName()} WHERE ${whereClause}`)) as T[] | null;
+	}
+
 	async findOne(condition: Record<string, string | number>): Promise<T | null> {
 		const whereClause = Object.entries(condition)
 			.map(([key, value]) => `${key} = ${typeof value === "string" ? `'${value}'` : value}`)

@@ -10,14 +10,27 @@ const alfaSlabOne = Alfa_Slab_One({
 export default function Header() {
 	const [isScrolled, setIsScrolled] = useState(false);
 
+	function checkContentScroll(e: WheelEvent) {
+		// Prevent header from appearing when scrolling the content
+		let r = true;
+		const target = e.target;
+		if (target instanceof Element) {
+			["#langList", "#clueList"].forEach((selector) => {
+				const element = target.closest(selector);
+
+				if (element && element?.scrollTop > 0) {
+					r = false;
+				}
+			});
+		}
+
+		return r;
+	}
+
 	useEffect(() => {
 		const handleScroll = (e: WheelEvent): void => {
-			// Prevent header from appearing when scrolling the language list
-			if (e.target instanceof Element) {
-				const scrollPos = e.target.closest("#langList")?.scrollTop;
-				if (scrollPos !== undefined && scrollPos > 0) {
-					return;
-				}
+			if (!checkContentScroll(e)) {
+				return;
 			}
 
 			if (e.deltaY > 0) {

@@ -1,6 +1,10 @@
 import { migrate } from "@/core/db";
+import { isAuthenticated } from "../actions";
 
 export default async function Migrate() {
+	if (!(await isAuthenticated())) {
+		return <h1>Login Required</h1>;
+	}
 
 	const { currentVersion, newVersion, error } = await migrate();
 
@@ -14,13 +18,12 @@ export default async function Migrate() {
 	}
 
 	if (currentVersion === newVersion) {
-		return (
-			<h1>Already at Latest Version __ {currentVersion} __</h1>
-		);
+		return <h1>Already at Latest Version __ {currentVersion} __</h1>;
 	} else {
 		return (
-		  <h1>Migrated Successfully to Version __ {newVersion} __ from __ {currentVersion} __</h1>
+			<h1>
+				Migrated Successfully to Version __ {newVersion} __ from __ {currentVersion} __
+			</h1>
 		);
 	}
-
 }

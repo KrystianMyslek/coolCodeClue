@@ -9,7 +9,8 @@ type AddActionProps_prevState = {
 };
 
 export async function getList() {
-	const langs = await Repository.create("lang").getAll();
+	const LangRepo = Repository.create("lang") as Lang;
+	const langs = await LangRepo.getAll();
 
 	return langs;
 }

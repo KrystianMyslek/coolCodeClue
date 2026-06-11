@@ -40,7 +40,7 @@ export default function QuillEditor({ value, height, onChange }: QuillEditorProp
 						[{ header: [1, 2, 3, false] }],
 						["bold", "italic", "underline", "strike"],
 						[{ list: "ordered" }, { list: "bullet" }],
-						["link", "code-block", "clean"],
+						["link", "code-block", "image", "clean"],
 					],
 				},
 			});

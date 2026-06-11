@@ -1,11 +1,16 @@
 "use server";
 
 import Repository from "@/core/repository";
-import Clue from "@/repository/clue";
+import Clue, { ClueType } from "@/repository/clue";
 
-type AddActionProps_prevState = {
+type add_props_prevState = {
 	success: boolean;
-	error: string | null;
+	errors: ClueErrorType | null;
+};
+
+type ClueErrorType = {
+	title: string | false;
+	content: string | false;
 };
 
 export async function getRandomList() {
@@ -22,23 +27,39 @@ export async function get(lang_id: string) {
 	return clues;
 }
 
-export async function add(prevState: AddActionProps_prevState, formData: FormData) {
-	const title = formData.get("title") as string;
-	const content = formData.get("content") as string;
-	const lang_id = parseInt(formData.get("lang_id") as string);
+export async function add(prevState: add_props_prevState, formData: FormData) {
+	const [valid, errors] = validate(formData);
 
-	if (!title) {
-		return { success: false, error: "Title is required." };
-	}
+	if (!valid) return { success: false, errors: errors };
 
-	if (!content) {
-		return { success: false, error: "Content is required." };
-	}
+	const { title, content, lang_id } = parseData(formData);
 
 	const user_id = 1;
 
 	const ClueRepo = Repository.create("clue") as Clue;
 	ClueRepo.add({ user_id, lang_id, title, content });
 
-	return { success: true, error: null };
+	return { success: true, errors: null };
+}
+
+function parseData(formData: FormData): Omit<ClueType, "id" | "user_id"> {
+	const title = formData.get("title") as string;
+	const content = formData.get("content") as string;
+	const lang_id = parseInt(formData.get("lang_id") as string);
+
+	return { title, content, lang_id };
+}
+
+function validate(formData: FormData): [boolean, ClueErrorType] {
+	const errors: ClueErrorType = {
+		title: false,
+		content: false,
+	};
+
+	const { title, content } = parseData(formData);
+
+	if (!title) errors.title = "Title is required.";
+	if (!content) errors.content = "Content is required.";
+
+	return [Object.values(errors).every((value) => value === false), errors];
 }

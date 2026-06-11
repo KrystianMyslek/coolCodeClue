@@ -15,7 +15,7 @@ export default function Header() {
 		let r = true;
 		const target = e.target;
 		if (target instanceof Element) {
-			["#langList", "#clueList"].forEach((selector) => {
+			["#langList", "#clueList", "#libraryList"].forEach((selector) => {
 				const element = target.closest(selector);
 
 				if (element && element?.scrollTop > 0) {

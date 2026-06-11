@@ -9,16 +9,14 @@ export default async function Langs() {
 	return (
 		<div
 			id="langList"
-			className="flex w-1/4 flex-col overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden;"
+			className="flex w-1/5 flex-col overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden;"
 		>
 			{isAuth && (
-				<div className="flex">
-					<Link className="primary-button w-full mt-3 mx-2 p-4 text-2xl font-bold" href="/lang/add">
-						Add Language
-					</Link>
-				</div>
+				<Link className="primary-button mt-3 mx-1 p-4 text-2xl font-bold" href="/lang/add">
+					Add Language
+				</Link>
 			)}
-			<div className="w-full flex flex-col p-4">
+			<div className="w-full flex flex-col py-3 px-2">
 				{langs.map((lang) => (
 					<Link className="secondary-button mb-2 p-4" href={`/clue/${lang.id}`} key={lang.id}>
 						{lang.name}

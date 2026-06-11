@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
-import { add } from "@/app/clue/actions";
+import { add } from "@/app/library/actions";
 import { Oval } from "react-loader-spinner";
 import { useSearchParams } from "next/navigation";
 
@@ -21,12 +21,13 @@ export default function Add() {
 		errors: null,
 	});
 
-	const [title, setTitle] = useState<string>("");
-	const [content, setContent] = useState<string>("");
+	const [name, setName] = useState<string>("");
+	const [url, setUrl] = useState<string>("");
+	const [description, setDescription] = useState<string>("");
 
 	useEffect(() => {
 		if (state.success) {
-			router.push(`/clue/${langId}`);
+			router.push(`/library/${langId}`);
 			router.refresh();
 		}
 	}, [state.success, router, langId]);
@@ -34,35 +35,52 @@ export default function Add() {
 	return (
 		!state.success && (
 			<div className="w-full p-10 flex flex-col">
-				<h1 className="text-3xl font-bold mb-4">Add Clue</h1>
+				<h1 className="text-3xl font-bold mb-4">Add Library</h1>
 
 				<form className="flex flex-col" action={formAction}>
 					<input type="hidden" name="lang_id" value={langId} />
 
-					{state.errors && state.errors.title && (
+					{}
+
+					{state.errors && state.errors.name && (
 						<div className="rounded-lg bg-red-50 p-4 mb-4 text-sm text-red-600 font-medium">
-							{state.errors.title}
+							{state.errors.name}
 						</div>
 					)}
 
 					<input
 						className="w-lg border mb-4 border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2"
-						name="title"
+						name="name"
 						type="text"
-						placeholder="Clue title"
-						value={title}
-						onChange={(e) => setTitle(e.target.value)}
+						placeholder="Library name"
+						value={name}
+						onChange={(e) => setName(e.target.value)}
 					/>
 
-					{state.errors && state.errors.content && (
+					{state.errors && state.errors.url && (
 						<div className="rounded-lg bg-red-50 p-4 mb-4 text-sm text-red-600 font-medium">
-							{state.errors.content}
+							{state.errors.url}
 						</div>
 					)}
 
-					<input type="hidden" name="content" value={content} />
+					<input
+						className="w-lg border mb-4 border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2"
+						name="url"
+						type="text"
+						placeholder="Library url"
+						value={url}
+						onChange={(e) => setUrl(e.target.value)}
+					/>
 
-					<Editor value={content} height="400px" onChange={setContent} />
+					{state.errors && state.errors.description && (
+						<div className="rounded-lg bg-red-50 p-4 mb-4 text-sm text-red-600 font-medium">
+							{state.errors.description}
+						</div>
+					)}
+
+					<input type="hidden" name="description" value={description} />
+
+					<Editor value={description} height="400px" onChange={setDescription} />
 
 					<button
 						disabled={isPending}
@@ -80,7 +98,7 @@ export default function Add() {
 								/>
 							</div>
 						) : (
-							"Add Clue"
+							"Add Library"
 						)}
 					</button>
 				</form>

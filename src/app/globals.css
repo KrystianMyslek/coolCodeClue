@@ -103,14 +103,17 @@
 	background-color: var(--title-main-bg-color);
 }
 
-.clue {
+.clue,
+.library {
 	border-color: var(--title-secondary-bg-color);
 
-	.title {
+	.title,
+	.name {
 		color: white;
 		background-color: var(--title-secondary-bg-color);
-	}
 
-	.clue_content {
+		a:hover {
+			color: var(--title-text-color);
+		}
 	}
 }

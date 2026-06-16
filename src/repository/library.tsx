@@ -10,6 +10,8 @@ export type LibraryType = {
 };
 
 export default class Library extends RepositoryCore<LibraryType> {
+	tableName = "library";
+
 	add(data: Omit<LibraryType, "id">) {
 		super.create(data);
 

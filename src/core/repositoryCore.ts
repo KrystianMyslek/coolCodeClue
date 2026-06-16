@@ -1,8 +1,10 @@
 import { execute } from "@/core/db";
 
 export class RepositoryCore<T> {
+	protected tableName = "";
+
 	private getTableName() {
-		return this.constructor.name.toLowerCase();
+		return this.tableName || this.constructor.name.toLowerCase();
 	}
 
 	async getAll(): Promise<T[]> {

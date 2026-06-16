@@ -9,6 +9,8 @@ export type ClueType = {
 };
 
 export default class Clue extends RepositoryCore<ClueType> {
+	tableName = "clue";
+
 	getByLangId(lang_id: number) {
 		return super.find({ lang_id });
 	}

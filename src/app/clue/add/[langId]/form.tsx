@@ -5,16 +5,13 @@ import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { add } from "@/app/clue/actions";
 import { Oval } from "react-loader-spinner";
-import { useSearchParams } from "next/navigation";
 
 import { Editor } from "@/components/textEditorWrapper";
 
 import "quill/dist/quill.snow.css";
+import Link from "next/link";
 
-export default function Add() {
-	const searchParams = useSearchParams();
-	const langId = searchParams.get("langId") || 1;
-
+export default function AddForm({ langId }: { langId: string }) {
 	const router = useRouter();
 	const [state, formAction, isPending] = useActionState(add, {
 		success: false,
@@ -64,25 +61,33 @@ export default function Add() {
 
 					<Editor value={content} height="400px" onChange={setContent} />
 
-					<button
-						disabled={isPending}
-						className="border hover:bg-gray-200 cursor-pointer px-4 font-bold mt-4 py-2 rounded w-42"
-						type="submit"
-					>
-						{isPending ? (
-							<div className="disabled:cursor-not-allowed disabled:opacity-50">
-								<Oval
-									visible={true}
-									color="#444"
-									secondaryColor="#aaa"
-									height="22"
-									width="22"
-								/>
+					<div className="flex gap-2">
+						<Link href={`/clue/${langId}`}>
+							<div className="border bg-red-200 hover:bg-red-300 cursor-pointer font-bold px-4 mt-4 py-2 rounded w-42 flex justify-center">
+								Cancel
 							</div>
-						) : (
-							"Add Clue"
-						)}
-					</button>
+						</Link>
+
+						<button
+							disabled={isPending}
+							className="border hover:bg-gray-200 cursor-pointer px-4 font-bold mt-4 py-2 rounded w-42"
+							type="submit"
+						>
+							{isPending ? (
+								<div className="disabled:cursor-not-allowed disabled:opacity-50">
+									<Oval
+										visible={true}
+										color="#444"
+										secondaryColor="#aaa"
+										height="22"
+										width="22"
+									/>
+								</div>
+							) : (
+								"Add Clue"
+							)}
+						</button>
+					</div>
 				</form>
 			</div>
 		)

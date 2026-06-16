@@ -25,10 +25,7 @@ export default async function Libraries({ params }: { params: Promise<{ langId: 
 					{isAuth && (
 						<Link
 							className="primary-button w-36 p-1 px-4 text-xl font-bold"
-							href={{
-								pathname: "/library/add",
-								query: { langId },
-							}}
+							href={`/library/add/${langId}`}
 						>
 							Add Library
 						</Link>

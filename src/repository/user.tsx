@@ -6,4 +6,6 @@ export type UserType = {
 	password: string;
 };
 
-export default class User extends RepositoryCore<UserType> {}
+export default class User extends RepositoryCore<UserType> {
+	tableName = "user";
+}

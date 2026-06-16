@@ -50,7 +50,7 @@ export async function login(prevState: LoginActionProps_prevState, formData: For
 		const cookieStore = await cookies();
 		cookieStore.set("session", sessionToken, {
 			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
+			secure: process.env.APP_ENV === "production",
 			sameSite: "strict",
 			maxAge: 60 * 60 * 24,
 			path: "/",

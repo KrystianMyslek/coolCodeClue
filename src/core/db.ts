@@ -69,8 +69,7 @@ export const migrate = async () => {
 				await connection.execute(query);
 				successfully_executed_migrations++;
 			} catch (err) {
-				console.error("Error executing query:", err);
-
+				console.error("Migration Error: Error executing query:", err);
 				error = err as Error;
 			}
 		}

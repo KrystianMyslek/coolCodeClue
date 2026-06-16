@@ -18,10 +18,7 @@ export default async function Clues({ params }: { params: Promise<{ langId: stri
 					{isAuth && (
 						<Link
 							className="primary-button w-32 p-1 px-4 text-xl font-bold"
-							href={{
-								pathname: "/clue/add",
-								query: { langId },
-							}}
+							href={`/clue/add/${langId}`}
 						>
 							Add Clue
 						</Link>

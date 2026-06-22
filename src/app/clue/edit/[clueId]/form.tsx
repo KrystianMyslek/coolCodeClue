@@ -2,72 +2,59 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { add } from "@/app/library/actions";
+import { edit } from "@/app/clue/actions";
 import { Oval } from "react-loader-spinner";
-import { Editor } from "@/components/textEditorWrapper";
 import Link from "next/link";
 import Error from "@/components/error";
+import { ClueType } from "@/repository/clue";
+import { Editor } from "@/components/textEditorWrapper";
 
 import "quill/dist/quill.snow.css";
 
-export default function AddForm({ langId }: { langId: string }) {
+export default function EditForm({ clue }: { clue: ClueType }) {
 	const router = useRouter();
-	const [state, formAction, isPending] = useActionState(add, {
+	const [state, formAction, isPending] = useActionState(edit, {
 		success: false,
 		errors: null,
 	});
 
-	const [name, setName] = useState<string>("");
-	const [url, setUrl] = useState<string>("");
-	const [description, setDescription] = useState<string>("");
+	const [title, setTitle] = useState<string>(clue.title);
+	const [content, setContent] = useState<string>(clue.content);
 
 	useEffect(() => {
 		if (state.success) {
-			router.push(`/library/${langId}`);
+			router.push(`/clue/${clue.lang_id}`);
 			router.refresh();
 		}
-	}, [state.success, router, langId]);
+	}, [state.success, router, clue.lang_id]);
 
 	return (
 		!state.success && (
 			<div className="w-full p-10 flex flex-col">
-				<h1 className="text-3xl font-bold mb-4">Add Library</h1>
+				<h1 className="text-3xl font-bold mb-4">Edit Clue</h1>
 
 				<form className="flex flex-col" action={formAction}>
-					<input type="hidden" name="lang_id" value={langId} />
+					<input type="hidden" name="id" value={clue.id} />
 
-					{}
-
-					{state.errors && state.errors.name && <Error error={state.errors.name} />}
+					{state.errors && state.errors.title && <Error error={state.errors.title} />}
 
 					<input
 						className="w-lg border mb-4 border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2"
-						name="name"
+						name="title"
 						type="text"
-						placeholder="Library name"
-						value={name}
-						onChange={(e) => setName(e.target.value)}
+						placeholder="Clue title"
+						value={title}
+						onChange={(e) => setTitle(e.target.value)}
 					/>
 
-					{state.errors && state.errors.url && <Error error={state.errors.url} />}
+					{state.errors && state.errors.content && <Error error={state.errors.content} />}
 
-					<input
-						className="w-lg border mb-4 border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2"
-						name="url"
-						type="text"
-						placeholder="Library url"
-						value={url}
-						onChange={(e) => setUrl(e.target.value)}
-					/>
+					<input type="hidden" name="content" value={content} />
 
-					{state.errors && state.errors.description && <Error error={state.errors.description} />}
-
-					<input type="hidden" name="description" value={description} />
-
-					<Editor value={description} height="400px" onChange={setDescription} />
+					<Editor value={content} height="400px" onChange={setContent} />
 
 					<div className="flex gap-2">
-						<Link href={`/library/${langId}`}>
+						<Link href={`/clue/${clue.lang_id}`}>
 							<div className="border bg-red-200 hover:bg-red-300 cursor-pointer font-bold px-4 mt-4 py-2 rounded w-42 flex justify-center">
 								Cancel
 							</div>
@@ -89,7 +76,7 @@ export default function AddForm({ langId }: { langId: string }) {
 									/>
 								</div>
 							) : (
-								"Add Library"
+								"Save Clue"
 							)}
 						</button>
 					</div>

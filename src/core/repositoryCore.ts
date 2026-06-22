@@ -28,17 +28,44 @@ export class RepositoryCore<T> {
 			.map(([key, value]) => `${key} = ${typeof value === "string" ? `'${value}'` : value}`)
 			.join(" AND ");
 
-		return (await execute(
-			`SELECT * FROM ${this.getTableName()} WHERE ${whereClause} LIMIT 1`,
-		)) as T | null;
+		const rows = (await execute(`SELECT * FROM ${this.getTableName()} WHERE ${whereClause} LIMIT 1`)) as
+			| T[]
+			| null;
+
+		return rows && rows[0];
 	}
 
 	async create(data: Record<string, string | number>): Promise<T> {
 		const columns = Object.keys(data).join(", ");
-		const values = Object.values(data)
-			.map((value) => (typeof value === "string" ? `'${value}'` : value))
+		const values_sql = Object.values(data)
+			.map(() => `?`)
 			.join(", ");
 
-		return (await execute(`INSERT INTO ${this.getTableName()} (${columns}) VALUES (${values})`)) as T;
+		const values = Object.values(data);
+
+		return (await execute(
+			`INSERT INTO ${this.getTableName()} (${columns}) VALUES (${values_sql})`,
+			values,
+		)) as T;
+	}
+
+	async update(
+		data: Record<string, string | number>,
+		condition: Record<string, string | number>,
+	): Promise<T> {
+		const setClause = Object.keys(data)
+			.map((key) => `${key} = ?`)
+			.join(", ");
+
+		const whereClause = Object.keys(condition)
+			.map((key) => `${key} = ?`)
+			.join(" AND ");
+
+		const values = Object.values({ ...data, ...condition });
+
+		return (await execute(
+			`UPDATE ${this.getTableName()} SET ${setClause} WHERE ${whereClause}`,
+			values,
+		)) as T;
 	}
 }

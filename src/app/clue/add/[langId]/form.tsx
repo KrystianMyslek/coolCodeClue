@@ -1,17 +1,16 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
-
 import { useRouter } from "next/navigation";
 import { add } from "@/app/clue/actions";
 import { Oval } from "react-loader-spinner";
-
+import Link from "next/link";
+import Error from "@/components/error";
 import { Editor } from "@/components/textEditorWrapper";
 
 import "quill/dist/quill.snow.css";
-import Link from "next/link";
 
-export default function AddForm({ langId }: { langId: string }) {
+export default function AddForm({ langId }: { langId: number }) {
 	const router = useRouter();
 	const [state, formAction, isPending] = useActionState(add, {
 		success: false,
@@ -36,11 +35,7 @@ export default function AddForm({ langId }: { langId: string }) {
 				<form className="flex flex-col" action={formAction}>
 					<input type="hidden" name="lang_id" value={langId} />
 
-					{state.errors && state.errors.title && (
-						<div className="rounded-lg bg-red-50 p-4 mb-4 text-sm text-red-600 font-medium">
-							{state.errors.title}
-						</div>
-					)}
+					{state.errors && state.errors.title && <Error error={state.errors.title} />}
 
 					<input
 						className="w-lg border mb-4 border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2"
@@ -51,11 +46,7 @@ export default function AddForm({ langId }: { langId: string }) {
 						onChange={(e) => setTitle(e.target.value)}
 					/>
 
-					{state.errors && state.errors.content && (
-						<div className="rounded-lg bg-red-50 p-4 mb-4 text-sm text-red-600 font-medium">
-							{state.errors.content}
-						</div>
-					)}
+					{state.errors && state.errors.content && <Error error={state.errors.content} />}
 
 					<input type="hidden" name="content" value={content} />
 
@@ -74,7 +65,7 @@ export default function AddForm({ langId }: { langId: string }) {
 							type="submit"
 						>
 							{isPending ? (
-								<div className="disabled:cursor-not-allowed disabled:opacity-50">
+								<div className="disabled:cursor-not-allowed disabled:opacity-50 w-full flex items-center justify-center">
 									<Oval
 										visible={true}
 										color="#444"

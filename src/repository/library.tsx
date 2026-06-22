@@ -17,4 +17,10 @@ export default class Library extends RepositoryCore<LibraryType> {
 
 		return true;
 	}
+
+	edit(id: number, data: Omit<LibraryType, "id" | "lang_id" | "user_id">) {
+		super.update(data, { id });
+
+		return true;
+	}
 }

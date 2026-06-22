@@ -1,12 +1,14 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { isAuthenticated } from "@/app/auth/actions";
-import { get } from "../actions";
+import { getList } from "../actions";
 
 import "quill/dist/quill.snow.css";
 import { Oval } from "react-loader-spinner";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
-export default async function Clues({ params }: { params: Promise<{ langId: string }> }) {
+export default async function Clues({ params }: { params: Promise<{ langId: number }> }) {
 	const isAuth = await isAuthenticated();
 	const { langId } = await params;
 
@@ -16,11 +18,12 @@ export default async function Clues({ params }: { params: Promise<{ langId: stri
 				<div className="bg-linear-to-b from-(--title-secondary-bg-color) to-white text-white w-1/2 px-3 rounded-t-2xl h-16 mr-2 flex justify-between items-center">
 					<span className="text-2xl">Clues</span>
 					{isAuth && (
-						<Link
-							className="primary-button w-32 p-1 px-4 text-xl font-bold"
-							href={`/clue/add/${langId}`}
-						>
-							Add Clue
+						<Link href={`/clue/add/${langId}`}>
+							<FontAwesomeIcon
+								className="cursor-pointer text-white hover:text-gray-300"
+								icon={faPlus}
+								width={24}
+							/>
 						</Link>
 					)}
 				</div>
@@ -46,15 +49,24 @@ export default async function Clues({ params }: { params: Promise<{ langId: stri
 	);
 }
 
-async function CluesList({ langId }: { langId: string }) {
-	const clues = await get(langId);
+async function CluesList({ langId }: { langId: number }) {
+	const clues = await getList(langId);
 
 	return (
 		<div id="clueList" className="p-2 overflow-y-auto">
 			{clues &&
 				clues.map((clue) => (
 					<div className="clue border-2 mb-4 rounded-lg" key={clue.id}>
-						<h4 className="title text-xl mb-2 py-2 px-4 ">{clue.title}</h4>
+						<h4 className="flex justify-between align-middle title text-xl mb-2 py-2 px-4">
+							<span>{clue.title}</span>
+							<Link href={{ pathname: `/clue/edit/${clue.id}` }}>
+								<FontAwesomeIcon
+									className="cursor-pointer text-white hover:text-gray-300"
+									icon={faPenToSquare}
+									width={24}
+								/>
+							</Link>
+						</h4>
 						<div className="ql-snow">
 							<div
 								className="ql-editor max-w-none"

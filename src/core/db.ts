@@ -35,7 +35,7 @@ const loadMigrations = async (version: number): Promise<string[][]> => {
 	return migrations;
 };
 
-const getMigrationVersion = (): number => {
+export const getMigrationVersion = (): number => {
 	let version = 0;
 	try {
 		version = parseInt(readFileSync(`${migrationsPath}/version`, "utf8").trim());
@@ -88,12 +88,13 @@ export const migrate = async () => {
 	};
 };
 
-export const execute = async (sql: string, values?: string[]) => {
+export const execute = async (sql: string, values?: (string | number)[]) => {
 	try {
 		const [rows] = await connection.execute({
 			sql,
 			values,
 		});
+
 		return rows;
 	} catch (error) {
 		console.error("Error executing query:", error);

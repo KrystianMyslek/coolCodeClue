@@ -2,41 +2,40 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { add } from "@/app/library/actions";
+import { edit } from "@/app/library/actions";
 import { Oval } from "react-loader-spinner";
-import { Editor } from "@/components/textEditorWrapper";
 import Link from "next/link";
 import Error from "@/components/error";
+import { LibraryType } from "@/repository/library";
+import { Editor } from "@/components/textEditorWrapper";
 
 import "quill/dist/quill.snow.css";
 
-export default function AddForm({ langId }: { langId: string }) {
+export default function EditForm({ library }: { library: LibraryType }) {
 	const router = useRouter();
-	const [state, formAction, isPending] = useActionState(add, {
+	const [state, formAction, isPending] = useActionState(edit, {
 		success: false,
 		errors: null,
 	});
 
-	const [name, setName] = useState<string>("");
-	const [url, setUrl] = useState<string>("");
-	const [description, setDescription] = useState<string>("");
+	const [name, setName] = useState<string>(library.name);
+	const [url, setUrl] = useState<string>(library.url);
+	const [description, setDescription] = useState<string>(library.description);
 
 	useEffect(() => {
 		if (state.success) {
-			router.push(`/library/${langId}`);
+			router.push(`/library/${library.lang_id}`);
 			router.refresh();
 		}
-	}, [state.success, router, langId]);
+	}, [state.success, router, library.lang_id]);
 
 	return (
 		!state.success && (
 			<div className="w-full p-10 flex flex-col">
-				<h1 className="text-3xl font-bold mb-4">Add Library</h1>
+				<h1 className="text-3xl font-bold mb-4">Edit Library</h1>
 
 				<form className="flex flex-col" action={formAction}>
-					<input type="hidden" name="lang_id" value={langId} />
-
-					{}
+					<input type="hidden" name="id" value={library.id} />
 
 					{state.errors && state.errors.name && <Error error={state.errors.name} />}
 
@@ -67,7 +66,7 @@ export default function AddForm({ langId }: { langId: string }) {
 					<Editor value={description} height="400px" onChange={setDescription} />
 
 					<div className="flex gap-2">
-						<Link href={`/library/${langId}`}>
+						<Link href={`/library/${library.lang_id}`}>
 							<div className="border bg-red-200 hover:bg-red-300 cursor-pointer font-bold px-4 mt-4 py-2 rounded w-42 flex justify-center">
 								Cancel
 							</div>
@@ -89,7 +88,7 @@ export default function AddForm({ langId }: { langId: string }) {
 									/>
 								</div>
 							) : (
-								"Add Library"
+								"Save Library"
 							)}
 						</button>
 					</div>

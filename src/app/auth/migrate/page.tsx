@@ -1,9 +1,11 @@
-import { migrate } from "@/core/db";
+import { getMigrationVersion, migrate } from "@/core/db";
 import { isAuthenticated } from "../actions";
 
 export default async function Migrate() {
 	if (!(await isAuthenticated())) {
-		return <h1>Login Required</h1>;
+		if (getMigrationVersion() != 0) {
+			return <h1>Login Required</h1>;
+		}
 	}
 
 	const { currentVersion, newVersion, error } = await migrate();

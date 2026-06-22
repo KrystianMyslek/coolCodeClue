@@ -20,4 +20,10 @@ export default class Clue extends RepositoryCore<ClueType> {
 
 		return true;
 	}
+
+	edit(id: number, data: Omit<ClueType, "id" | "lang_id" | "user_id">) {
+		super.update(data, { id });
+
+		return true;
+	}
 }

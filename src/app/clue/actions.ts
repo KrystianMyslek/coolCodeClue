@@ -20,11 +20,18 @@ export async function getRandomList() {
 	return clues;
 }
 
-export async function get(lang_id: string) {
+export async function getList(lang_id: number) {
 	const cluesRepo = Repository.create("clue") as Clue;
 	const clues = await cluesRepo.find({ lang_id });
 
 	return clues;
+}
+
+export async function get(id: number) {
+	const cluesRepo = Repository.create("clue") as Clue;
+	const clue = await cluesRepo.findOne({ id });
+
+	return clue;
 }
 
 export async function add(prevState: add_props_prevState, formData: FormData) {
@@ -42,12 +49,33 @@ export async function add(prevState: add_props_prevState, formData: FormData) {
 	return { success: true, errors: null };
 }
 
+export async function edit(prevState: add_props_prevState, formData: FormData) {
+	const [valid, errors] = validate(formData);
+
+	if (!valid) return { success: false, errors: errors };
+
+	const { id, title, content } = parseEditData(formData);
+
+	const ClueRepo = Repository.create("clue") as Clue;
+	ClueRepo.edit(id, { title, content });
+
+	return { success: true, errors: null };
+}
+
 function parseData(formData: FormData): Omit<ClueType, "id" | "user_id"> {
 	const title = formData.get("title") as string;
 	const content = formData.get("content") as string;
-	const lang_id = parseInt(formData.get("lang_id") as string);
+	const lang_id = Number(formData.get("lang_id"));
 
 	return { title, content, lang_id };
+}
+
+function parseEditData(formData: FormData): Omit<ClueType, "lang_id" | "user_id"> {
+	const id = Number(formData.get("id"));
+	const title = formData.get("title") as string;
+	const content = formData.get("content") as string;
+
+	return { id, title, content };
 }
 
 function validate(formData: FormData): [boolean, ClueErrorType] {

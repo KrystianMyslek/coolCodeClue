@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+	--breakpoint-3xl: 120rem;
+}
+
 :root {
 	--title-main-bg-color: #283655;
 	--title-secondary-bg-color: #4d648d;
@@ -116,4 +120,16 @@
 			color: var(--title-text-color);
 		}
 	}
+}
+
+.my-masonry-grid {
+	display: -webkit-box; /* Not needed if autoprefixing */
+	display: -ms-flexbox; /* Not needed if autoprefixing */
+	display: flex;
+	margin-left: -10px;
+	width: auto;
+}
+.my-masonry-grid_column {
+	padding-left: 10px;
+	background-clip: padding-box;
 }

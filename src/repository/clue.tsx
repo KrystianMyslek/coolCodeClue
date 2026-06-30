@@ -1,4 +1,5 @@
 import { RepositoryCore } from "@/core/repositoryCore";
+import { execute } from "@/core/db";
 
 export type ClueType = {
 	id: number;
@@ -7,6 +8,8 @@ export type ClueType = {
 	title: string;
 	content: string;
 };
+
+export type ClueTypeWithLang = ClueType & { langName: string };
 
 export default class Clue extends RepositoryCore<ClueType> {
 	tableName = "clue";
@@ -25,5 +28,13 @@ export default class Clue extends RepositoryCore<ClueType> {
 		super.update(data, { id });
 
 		return true;
+	}
+
+	async getAllWithLangName(): Promise<ClueTypeWithLang[]> {
+		const query = `SELECT c.* , l.name as langName 
+			FROM ${this.tableName} c
+			LEFT JOIN lang l ON (c.lang_id = l.id)`;
+
+		return (await execute(query)) as ClueTypeWithLang[];
 	}
 }

@@ -50,7 +50,7 @@ export default async function Libraries({ params }: { params: Promise<{ langId: 
 }
 
 async function LibrariesList({ langId }: { langId: string }) {
-	const Libraries = await getList(langId);
+	const [isAuth, Libraries] = await Promise.all([isAuthenticated(), getList(langId)]);
 
 	return (
 		<div id="libraryList" className="p-2 overflow-y-auto">
@@ -61,13 +61,15 @@ async function LibrariesList({ langId }: { langId: string }) {
 							<a target="_blank" href={lib.url}>
 								{lib.name}
 							</a>
-							<Link href={{ pathname: `/library/edit/${lib.id}` }}>
-								<FontAwesomeIcon
-									className="cursor-pointer text-white hover:text-gray-300"
-									icon={faPenToSquare}
-									width={24}
-								/>
-							</Link>
+							{isAuth && (
+								<Link href={{ pathname: `/library/edit/${lib.id}` }}>
+									<FontAwesomeIcon
+										className="cursor-pointer text-white hover:text-gray-300"
+										icon={faPenToSquare}
+										width={24}
+									/>
+								</Link>
+							)}
 						</h4>
 						<div className="ql-snow">
 							<div

@@ -15,7 +15,7 @@ type ClueErrorType = {
 
 export async function getRandomList() {
 	const cluesRepo = Repository.create("clue") as Clue;
-	const clues = await cluesRepo.getAll();
+	const clues = await cluesRepo.getAllWithLangName();
 
 	return clues;
 }

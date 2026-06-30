@@ -50,7 +50,7 @@ export default async function Clues({ params }: { params: Promise<{ langId: numb
 }
 
 async function CluesList({ langId }: { langId: number }) {
-	const clues = await getList(langId);
+	const [isAuth, clues] = await Promise.all([isAuthenticated(), getList(langId)]);
 
 	return (
 		<div id="clueList" className="p-2 overflow-y-auto">
@@ -59,13 +59,15 @@ async function CluesList({ langId }: { langId: number }) {
 					<div className="clue border-2 mb-4 rounded-lg" key={clue.id}>
 						<h4 className="flex justify-between align-middle title text-xl mb-2 py-2 px-4">
 							<span>{clue.title}</span>
-							<Link href={{ pathname: `/clue/edit/${clue.id}` }}>
-								<FontAwesomeIcon
-									className="cursor-pointer text-white hover:text-gray-300"
-									icon={faPenToSquare}
-									width={24}
-								/>
-							</Link>
+							{isAuth && (
+								<Link href={{ pathname: `/clue/edit/${clue.id}` }}>
+									<FontAwesomeIcon
+										className="cursor-pointer text-white hover:text-gray-300"
+										icon={faPenToSquare}
+										width={24}
+									/>
+								</Link>
+							)}
 						</h4>
 						<div className="ql-snow">
 							<div

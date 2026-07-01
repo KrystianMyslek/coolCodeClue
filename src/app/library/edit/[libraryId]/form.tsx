@@ -3,13 +3,13 @@
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { edit } from "@/app/library/actions";
-import { Oval } from "react-loader-spinner";
 import Link from "next/link";
 import Error from "@/components/error";
 import { LibraryType } from "@/repository/library";
 import { Editor } from "@/components/textEditorWrapper";
 
 import "quill/dist/quill.snow.css";
+import Loader from "@/components/loader";
 
 export default function EditForm({ library }: { library: LibraryType }) {
 	const router = useRouter();
@@ -77,19 +77,7 @@ export default function EditForm({ library }: { library: LibraryType }) {
 							className="border hover:bg-gray-200 cursor-pointer px-4 font-bold mt-4 py-2 rounded w-42"
 							type="submit"
 						>
-							{isPending ? (
-								<div className="disabled:cursor-not-allowed disabled:opacity-50 w-full flex items-center justify-center">
-									<Oval
-										visible={true}
-										color="#444"
-										secondaryColor="#aaa"
-										height="22"
-										width="22"
-									/>
-								</div>
-							) : (
-								"Save Library"
-							)}
+							{isPending ? <Loader size={22} /> : "Save Library"}
 						</button>
 					</div>
 				</form>

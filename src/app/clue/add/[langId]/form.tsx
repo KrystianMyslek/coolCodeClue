@@ -3,12 +3,12 @@
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { add } from "@/app/clue/actions";
-import { Oval } from "react-loader-spinner";
 import Link from "next/link";
 import Error from "@/components/error";
 import { Editor } from "@/components/textEditorWrapper";
 
 import "quill/dist/quill.snow.css";
+import Loader from "@/components/loader";
 
 export default function AddForm({ langId }: { langId: number }) {
 	const router = useRouter();
@@ -64,19 +64,7 @@ export default function AddForm({ langId }: { langId: number }) {
 							className="border hover:bg-gray-200 cursor-pointer px-4 font-bold mt-4 py-2 rounded w-42"
 							type="submit"
 						>
-							{isPending ? (
-								<div className="disabled:cursor-not-allowed disabled:opacity-50 w-full flex items-center justify-center">
-									<Oval
-										visible={true}
-										color="#444"
-										secondaryColor="#aaa"
-										height="22"
-										width="22"
-									/>
-								</div>
-							) : (
-								"Add Clue"
-							)}
+							{isPending ? <Loader size={22} /> : "Add Clue"}
 						</button>
 					</div>
 				</form>

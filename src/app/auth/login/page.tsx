@@ -3,7 +3,7 @@
 import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/app/auth/actions";
-import { Oval } from "react-loader-spinner";
+import Loader from "@/components/loader";
 
 export default function LoginPage() {
 	const router = useRouter();
@@ -43,19 +43,7 @@ export default function LoginPage() {
 						className="border hover:bg-gray-200 cursor-pointer w-full font-bold mt-4 py-2 rounded flex items-center justify-center"
 						type="submit"
 					>
-						{isPending ? (
-							<div className="disabled:cursor-not-allowed disabled:opacity-50">
-								<Oval
-									visible={true}
-									color="#444"
-									secondaryColor="#aaa"
-									height="22"
-									width="22"
-								/>
-							</div>
-						) : (
-							"Log in"
-						)}
+						{isPending ? <Loader size={22} /> : "Log in"}
 					</button>
 				</form>
 			</div>

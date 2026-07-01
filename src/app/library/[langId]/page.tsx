@@ -4,9 +4,10 @@ import { isAuthenticated } from "@/app/auth/actions";
 import { getList } from "../actions";
 
 import "quill/dist/quill.snow.css";
-import { Oval } from "react-loader-spinner";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import Loader from "@/components/loader";
 
 export default async function Libraries({ params }: { params: Promise<{ langId: string }> }) {
 	const isAuth = await isAuthenticated();
@@ -36,13 +37,7 @@ export default async function Libraries({ params }: { params: Promise<{ langId: 
 				</div>
 			</div>
 
-			<Suspense
-				fallback={
-					<div className="disabled:cursor-not-allowed disabled:opacity-50 w-full flex items-center justify-center h-3/5">
-						<Oval visible={true} color="#444" secondaryColor="#aaa" height="64" width="64" />
-					</div>
-				}
-			>
+			<Suspense fallback={<Loader size={64} pageCenter={true} />}>
 				<LibrariesList langId={langId} />
 			</Suspense>
 		</div>

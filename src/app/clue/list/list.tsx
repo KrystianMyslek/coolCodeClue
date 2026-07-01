@@ -3,7 +3,7 @@
 import Masonry from "react-masonry-css";
 import { ClueTypeWithLang } from "@/repository/clue";
 import { useSyncExternalStore } from "react";
-import { Oval } from "react-loader-spinner";
+import Loader from "@/components/loader";
 
 function subscribeBreakpointCols(callback: () => void): () => void {
 	window.addEventListener("resize", callback);
@@ -11,7 +11,7 @@ function subscribeBreakpointCols(callback: () => void): () => void {
 }
 
 function getClientBreakpointCols(): number {
-	return window.innerWidth > 1880 ? 3 : 2;
+	return window.innerWidth > 1920 ? 3 : 2;
 }
 
 function getServerBreakpointCols(): number {
@@ -26,11 +26,7 @@ export default function List({ clues }: { clues: ClueTypeWithLang[] }) {
 	);
 
 	if (!breakpointCols) {
-		return (
-			<div className="disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center h-3/5">
-				<Oval visible={true} color="#444" secondaryColor="#aaa" height="64" width="64" />
-			</div>
-		);
+		return <Loader size={64} pageCenter={true} />;
 	}
 
 	return (

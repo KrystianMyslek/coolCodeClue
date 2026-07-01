@@ -3,7 +3,7 @@
 import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { add } from "@/app/lang/actions";
-import { Oval } from "react-loader-spinner";
+import Loader from "@/components/loader";
 
 export default function Add() {
 	const router = useRouter();
@@ -43,19 +43,7 @@ export default function Add() {
 						className="border hover:bg-gray-200 cursor-pointer px-4 font-bold mt-4 py-2 rounded flex items-center justify-center"
 						type="submit"
 					>
-						{isPending ? (
-							<div className="disabled:cursor-not-allowed disabled:opacity-50">
-								<Oval
-									visible={true}
-									color="#444"
-									secondaryColor="#aaa"
-									height="22"
-									width="22"
-								/>
-							</div>
-						) : (
-							"Add Language"
-						)}
+						{isPending ? <Loader size={22} /> : "Add Language"}
 					</button>
 				</form>
 			</div>

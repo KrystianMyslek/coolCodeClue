@@ -14,7 +14,7 @@ type LibraryErrorType = {
 	description: string | false;
 };
 
-export async function getList(lang_id: string) {
+export async function getList(lang_id: number) {
 	const libraryRepo = Repository.create("library") as Library;
 	const libraries = await libraryRepo.find({ lang_id });
 

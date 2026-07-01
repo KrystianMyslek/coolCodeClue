@@ -11,7 +11,8 @@ import Loader from "@/components/loader";
 
 export default async function Libraries({ params }: { params: Promise<{ langId: string }> }) {
 	const isAuth = await isAuthenticated();
-	const { langId } = await params;
+	const resolvedParams = await params;
+	const langId = Number(resolvedParams.langId);
 
 	return (
 		<div className="flex flex-col w-4/5 h-full">
@@ -44,7 +45,7 @@ export default async function Libraries({ params }: { params: Promise<{ langId: 
 	);
 }
 
-async function LibrariesList({ langId }: { langId: string }) {
+async function LibrariesList({ langId }: { langId: number }) {
 	const [isAuth, Libraries] = await Promise.all([isAuthenticated(), getList(langId)]);
 
 	return (

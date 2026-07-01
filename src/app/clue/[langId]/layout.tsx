@@ -5,9 +5,10 @@ export default async function Layout({
 	params,
 }: Readonly<{
 	children: React.ReactNode;
-	params: Promise<{ langId: number }>;
+	params: Promise<{ langId: string }>;
 }>) {
-	const { langId } = await params;
+	const resolvedParams = await params;
+	const langId = Number(resolvedParams.langId);
 
 	return (
 		<div className="content">

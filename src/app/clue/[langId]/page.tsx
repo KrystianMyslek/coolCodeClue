@@ -8,9 +8,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Loader from "@/components/loader";
 
-export default async function Clues({ params }: { params: Promise<{ langId: number }> }) {
+export default async function Clues({ params }: { params: Promise<{ langId: string }> }) {
 	const isAuth = await isAuthenticated();
-	const { langId } = await params;
+	const resolvedParams = await params;
+	const langId = Number(resolvedParams.langId);
 
 	return (
 		<div className="flex flex-col w-4/5 h-full">
